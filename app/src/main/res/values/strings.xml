@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AVESON ARTIST</string>
+    <string name="welcome_subtitle">Artist Management Platform</string>
+    <string name="foundation_message">Your creative journey starts here.</string>
+    <string name="get_started">GET STARTED</string>
+    <string name="version_label">AVESON ARTIST • VERSION 1.0.0</string>
+</resources>

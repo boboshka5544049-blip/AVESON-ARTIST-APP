@@ -1,0 +1,7 @@
+<resources>
+    <color name="aveson_background">#080812</color>
+    <color name="aveson_surface">#16142A</color>
+    <color name="aveson_purple">#9B5DE5</color>
+    <color name="aveson_white">#FFFFFF</color>
+    <color name="aveson_muted">#A5A5B9</color>
+</resources>
