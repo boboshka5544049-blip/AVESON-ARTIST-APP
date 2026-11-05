@@ -7,3 +7,9 @@ build/
 .externalNativeBuild/
 .cxx/
 *.iml
+
+# Local and temporary files
+local.properties
+*.before_*
+aveson_nav_block.txt
+test.txt

@@ -1,10 +1,11 @@
 <resources>
-    <style name="Theme.AvesonArtist" parent="@android:style/Theme.Material.Light.NoActionBar">
+    <style name="Theme.AvesonArtist" parent="@android:style/Theme.Material.NoActionBar">
         <item name="android:fontFamily">sans</item>
-        <item name="android:colorAccent">@color/aveson_purple</item>
+        <item name="android:colorAccent">@color/aveson_blue</item>
         <item name="android:statusBarColor">@color/aveson_background</item>
         <item name="android:navigationBarColor">@color/aveson_background</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">@color/aveson_background</item>
     </style>
 </resources>
