@@ -1,6 +1,7 @@
 package com.aveson.artist;
 
 import android.app.Activity;
+import com.aveson.artist.ui.ArtistUI;
 import android.os.Bundle;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
+    private ArtistUI artistUI;
 
     private LinearLayout content;
     private Page currentPage;
@@ -44,6 +46,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        artistUI = new ArtistUI(this);
         setContentView(R.layout.activity_main);
 
         Button start = findViewById(R.id.getStartedButton);
@@ -599,18 +602,11 @@ public class MainActivity extends Activity {
     }
 
     private LinearLayout makeCard() {
-        LinearLayout card = new LinearLayout(this);
-        card.setOrientation(LinearLayout.VERTICAL);
-        card.setPadding(dp(15), dp(15), dp(15), dp(15));
-        card.setBackground(roundDrawable(CARD, 18, BORDER));
-        return card;
+        return artistUI.makeCard(CARD, BORDER);
     }
 
     private void addCardToContent(LinearLayout card) {
-        LinearLayout.LayoutParams params =
-            new LinearLayout.LayoutParams(-1, -2);
-        params.setMargins(0, dp(7), 0, dp(7));
-        content.addView(card, params);
+        artistUI.addCardToContent(content, card);
     }
 
     private void addText(
@@ -619,13 +615,7 @@ public class MainActivity extends Activity {
         int color,
         boolean bold
     ) {
-        TextView text = makeText(value, size, color, bold);
-
-        LinearLayout.LayoutParams params =
-            new LinearLayout.LayoutParams(-1, -2);
-        params.setMargins(dp(3), dp(7), dp(3), dp(7));
-
-        content.addView(text, params);
+        artistUI.addText(content, value, size, color, bold);
     }
 
     private TextView makeText(
@@ -634,16 +624,7 @@ public class MainActivity extends Activity {
         int color,
         boolean bold
     ) {
-        TextView text = new TextView(this);
-        text.setText(value);
-        text.setTextSize(size);
-        text.setTextColor(color);
-
-        if (bold) {
-            text.setTypeface(null, Typeface.BOLD);
-        }
-
-        return text;
+        return artistUI.makeText(value, size, color, bold);
     }
 
     private Button makeButton(
@@ -651,17 +632,7 @@ public class MainActivity extends Activity {
         int bg,
         int fg
     ) {
-        Button button = new Button(this);
-        button.setText(value);
-        button.setTextColor(fg);
-        button.setTextSize(12);
-        button.setAllCaps(false);
-        button.setMinHeight(0);
-        button.setMinWidth(0);
-        button.setPadding(dp(8), 0, dp(8), 0);
-        button.setStateListAnimator(null);
-        button.setBackground(roundDrawable(bg, 13, bg));
-        return button;
+        return artistUI.makeButton(value, bg, fg);
     }
 
     private GradientDrawable roundDrawable(
@@ -669,17 +640,11 @@ public class MainActivity extends Activity {
         int radius,
         int strokeColor
     ) {
-        GradientDrawable shape = new GradientDrawable();
-        shape.setColor(color);
-        shape.setCornerRadius(dp(radius));
-        shape.setStroke(dp(1), strokeColor);
-        return shape;
+        return artistUI.roundDrawable(color, radius, strokeColor);
     }
 
     private int dp(int value) {
-        return (int) (
-            value * getResources().getDisplayMetrics().density + 0.5f
-        );
+        return artistUI.dp(value);
     }
 
     @Override
