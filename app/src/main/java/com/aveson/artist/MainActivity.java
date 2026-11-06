@@ -276,31 +276,14 @@ public class MainActivity extends Activity {
         );
     }
     private void showHomeContent() {
-        addText("WELCOME BACK", 12, BLUE, true);
-        addText("Your creative world.", 27, WHITE, true);
-        addText(
-            "Everything you need for your music career.",
-            14, MUTED, false
+        ArtistHome artistHome = new ArtistHome(
+            this,
+            content,
+            artistUI,
+            (type, title) -> selectTab(type, title)
         );
 
-        addFeatureCard(
-            "✦",
-            "YOUR ARTIST SPACE",
-            "Manage your music, profile and creative journey.",
-            "PROFILE",
-            "PROFILE"
-        );
-
-        addSectionTitle("QUICK ACCESS");
-
-        addQuickCard("♫", "MY MUSIC", "Your personal music library",
-            "MY_MUSIC", "MY MUSIC");
-
-        addQuickCard("◎", "DISCOVERY", "Explore artists and new talent",
-            "DISCOVERY", "DISCOVERY");
-
-        addQuickCard("↑", "UPLOAD MUSIC", "Submit your music for review",
-            "UPLOAD", "UPLOAD MUSIC");
+        artistHome.render();
     }
 
     private void showMenuContent() {
