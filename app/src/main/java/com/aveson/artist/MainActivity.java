@@ -2,6 +2,7 @@ package com.aveson.artist;
 
 import android.app.Activity;
 import com.aveson.artist.ui.ArtistUI;
+import com.aveson.artist.menu.ArtistMenuContent;
 import android.os.Bundle;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -287,44 +288,21 @@ public class MainActivity extends Activity {
     }
 
     private void showMenuContent() {
-        addText("EXPLORE", 12, BLUE, true);
-        addText("MAIN MENU", 27, WHITE, true);
-        addText(
-            "Your complete artist management space.",
-            14, MUTED, false
+        ArtistMenuContent menuContent = new ArtistMenuContent(
+            this,
+            content,
+            artistUI,
+            (title, items) -> navigate(
+                new Page("CATEGORY", title, items)
+            ),
+            CARD,
+            BLUE,
+            WHITE,
+            MUTED,
+            BORDER
         );
 
-        String[] workspace = {
-            "ARTIST PROFILE",
-            "MY RELEASES",
-            "MY MUSIC",
-            "ROYALTY & EARNINGS",
-            "ANALYTICS",
-            "COLLABORATION",
-            "EVENTS & SCHEDULE"
-        };
-
-        String[] services = {
-            "DOCUMENTS & CONTRACTS",
-            "SUPPORT CENTER",
-            "MY CAREER",
-            "NOTIFICATIONS CENTER",
-            "LANGUAGE SETTINGS"
-        };
-
-        addRoomCard(
-            "01",
-            "ARTIST WORKSPACE",
-            "Your music, profile, releases and career.",
-            workspace
-        );
-
-        addRoomCard(
-            "02",
-            "ARTIST SERVICES",
-            "Support, documents and artist services.",
-            services
-        );
+        menuContent.render();
     }
 
     private void addRoomCard(
