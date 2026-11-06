@@ -408,16 +408,19 @@ public class MainActivity extends Activity {
     }
 
     private void showNotifications() {
-        addText("UPDATES AND ACTIVITY", 12, BLUE, true);
-        addText("NOTIFICATIONS", 25, WHITE, true);
-
-        addFeatureCard(
-            "♢",
-            "YOU'RE ALL CAUGHT UP",
-            "Release approvals, review feedback, distribution updates, payments and AVESON announcements will appear here.",
-            null,
-            null
+        ArtistNotifications notifications = new ArtistNotifications(
+            this,
+            content,
+            artistUI,
+            SURFACE,
+            CARD,
+            BLUE,
+            WHITE,
+            MUTED,
+            BORDER
         );
+
+        notifications.render();
     }
 
     private void showRoom(Page page) {
