@@ -355,61 +355,21 @@ public class MainActivity extends Activity {
     }
 
     private void showDiscovery() {
-        addText("EXPLORE THE COMMUNITY", 12, BLUE, true);
-        addText("DISCOVERY", 27, WHITE, true);
-        addText(
-            "Find artists, discover music and explore new talent.",
-            14, MUTED, false
+        ArtistDiscovery discovery = new ArtistDiscovery(
+            this, content, artistUI,
+            (type, title) -> navigate(new Page(type, title, null)),
+            CARD, BLUE, WHITE, MUTED, BORDER
         );
-
-        addQuickCard("★", "POPULAR ARTISTS",
-            "Artists gaining attention", "ROOM", "POPULAR ARTISTS");
-
-        addQuickCard("♫", "MOST LISTENED",
-            "Discover popular music", "ROOM", "MOST LISTENED");
-
-        addQuickCard("↗", "RISING ARTISTS",
-            "New and growing talent", "ROOM", "RISING ARTISTS");
-
-        addQuickCard("✦", "FEATURED ARTISTS",
-            "Artists selected by AVESON", "ROOM", "FEATURED ARTISTS");
-
-        addQuickCard("◎", "MY RECOMMENDATIONS",
-            "Artists recommended for you", "ROOM", "MY RECOMMENDATIONS");
+        discovery.render();
     }
 
     private void showUpload() {
-        addText("CREATE AND SUBMIT", 12, BLUE, true);
-        addText("UPLOAD MUSIC", 27, WHITE, true);
-
-        addFeatureCard(
-            "↑",
-            "YOUR MUSIC. YOUR JOURNEY.",
-            "Submit your music to AVESON for review and distribution.",
-            null,
-            null
+        ArtistUpload upload = new ArtistUpload(
+            this, content, artistUI,
+            (type, title) -> navigate(new Page(type, title, null)),
+            SURFACE, CARD, BLUE, WHITE, MUTED, BORDER
         );
-
-        addSectionTitle("UPLOAD PROCESS");
-
-        addQuickCard("01", "SELECT AUDIO",
-            "Choose your music file", "ROOM", "SELECT AUDIO");
-
-        addQuickCard("02", "ADD COVER ART",
-            "Choose your release artwork", "ROOM", "ADD COVER ART");
-
-        addQuickCard("03", "ADD DETAILS",
-            "Enter your song and artist information", "ROOM", "ADD DETAILS");
-
-        addQuickCard("04", "SUBMIT FOR REVIEW",
-            "Send your release to AVESON ARTIST CONTROL",
-            "ROOM", "SUBMIT FOR REVIEW");
-
-        addText(
-            "IMPORTANT: Uploaded music does not become public automatically. " +
-            "AVESON ARTIST CONTROL must review and approve it first.",
-            13, MUTED, false
-        );
+        upload.render();
     }
 
     private void showMyMusic() {
