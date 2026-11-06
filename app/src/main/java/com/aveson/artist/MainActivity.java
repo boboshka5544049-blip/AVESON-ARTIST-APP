@@ -424,16 +424,20 @@ public class MainActivity extends Activity {
     }
 
     private void showRoom(Page page) {
-        addText("ARTIST WORKSPACE", 12, BLUE, true);
-        addText(page.title, 25, WHITE, true);
-
-        addFeatureCard(
-            "✦",
+        ArtistRoom room = new ArtistRoom(
+            this,
+            content,
+            artistUI,
             page.title,
-            "This section will be developed step by step.",
-            null,
-            null
+            SURFACE,
+            CARD,
+            BLUE,
+            WHITE,
+            MUTED,
+            BORDER
         );
+
+        room.render();
     }
 
     private void addSectionTitle(String title) {
