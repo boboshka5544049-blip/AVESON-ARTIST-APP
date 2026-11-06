@@ -1,4 +1,3 @@
-
 package com.aveson.artist;
 
 import android.app.Activity;
