@@ -276,6 +276,7 @@ public class MainActivity extends Activity {
             new LinearLayout.LayoutParams(0, dp(68), 1)
         );
     }
+
     private void showHomeContent() {
         ArtistHome artistHome = new ArtistHome(
             this,
@@ -390,22 +391,20 @@ public class MainActivity extends Activity {
     }
 
     private void showProfile() {
-        addText("YOUR IDENTITY", 12, BLUE, true);
-        addText("ARTIST PROFILE", 27, WHITE, true);
-
-        addFeatureCard(
-            "●",
-            "PRIVATE ARTIST PROFILE",
-            "Manage your artist information and choose what can be shown publicly.",
-            null,
-            null
+        ArtistProfile profile = new ArtistProfile(
+            this,
+            content,
+            artistUI,
+            (type, title) -> navigate(new Page(type, title, null)),
+            SURFACE,
+            CARD,
+            BLUE,
+            WHITE,
+            MUTED,
+            BORDER
         );
 
-        addQuickCard("✎", "EDIT PROFILE",
-            "Update your artist information", "ROOM", "EDIT PROFILE");
-
-        addQuickCard("◎", "PUBLIC PROFILE",
-            "Manage information visible to others", "ROOM", "PUBLIC PROFILE");
+        profile.render();
     }
 
     private void showNotifications() {
