@@ -3,6 +3,8 @@ package com.aveson.artist;
 import android.app.Activity;
 import com.aveson.artist.ui.ArtistUI;
 import com.aveson.artist.menu.ArtistMenuContent;
+import com.aveson.artist.navigation.ArtistNavigation;
+import com.aveson.artist.navigation.ArtistPage;
 import android.os.Bundle;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -14,14 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 public class MainActivity extends Activity {
     private ArtistUI artistUI;
 
     private LinearLayout content;
-    private Page currentPage;
-    private final ArrayList<Page> history = new ArrayList<>();
+    private final ArtistNavigation navigation = new ArtistNavigation();
 
     private final int BG = Color.rgb(8, 11, 20);
     private final int SURFACE = Color.rgb(17, 26, 43);
@@ -31,18 +30,6 @@ public class MainActivity extends Activity {
     private final int WHITE = Color.WHITE;
     private final int MUTED = Color.rgb(165, 178, 200);
     private final int BORDER = Color.rgb(41, 59, 87);
-
-    private static class Page {
-        String type;
-        String title;
-        String[] items;
-
-        Page(String type, String title, String[] items) {
-            this.type = type;
-            this.title = title;
-            this.items = items;
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,60 +42,67 @@ public class MainActivity extends Activity {
     }
 
     private void showHome() {
-        history.clear();
-        render(new Page("HOME", "HOME", null));
+        navigation.selectTab(new ArtistPage("HOME", "HOME", null));
+        render(navigation.getCurrentPage());
     }
 
-    private void navigate(Page page) {
-        if (currentPage != null) {
-            history.add(currentPage);
-        }
+    private void navigate(ArtistPage page) {
+        navigation.navigate(page);
         render(page);
     }
 
     private void selectTab(String type, String title) {
-        history.clear();
-        render(new Page(type, title, null));
+        ArtistPage page = new ArtistPage(type, title, null);
+        navigation.selectTab(page);
+        render(page);
     }
 
     private void goBack() {
-        if (!history.isEmpty()) {
-            Page previous = history.remove(history.size() - 1);
+        ArtistPage previous = navigation.goBack();
+
+        if (previous != null) {
             render(previous);
         } else {
             super.onBackPressed();
         }
     }
 
-    private void render(Page page) {
-        currentPage = page;
+    private void render(ArtistPage page) {
         createScreen();
 
         switch (page.type) {
             case "HOME":
                 showHomeContent();
                 break;
+
             case "MENU":
                 showMenuContent();
                 break;
+
             case "CATEGORY":
                 showCategoryContent(page);
                 break;
+
             case "NOTIFICATIONS":
                 showNotifications();
                 break;
+
             case "DISCOVERY":
                 showDiscovery();
                 break;
+
             case "UPLOAD":
                 showUpload();
                 break;
+
             case "MY_MUSIC":
                 showMyMusic();
                 break;
+
             case "PROFILE":
                 showProfile();
                 break;
+
             case "ROOM":
                 showRoom(page);
                 break;
@@ -134,39 +128,55 @@ public class MainActivity extends Activity {
         top.setOrientation(LinearLayout.HORIZONTAL);
         top.setGravity(Gravity.CENTER_VERTICAL);
 
-        boolean isHome = currentPage.type.equals("HOME");
+        boolean isHome =
+            navigation.getCurrentPage().type.equals("HOME");
 
         if (!isHome) {
             Button back = makeButton("‹", SURFACE, WHITE);
             back.setTextSize(29);
             back.setOnClickListener(v -> goBack());
 
-            top.addView(back, new LinearLayout.LayoutParams(dp(44), dp(46)));
+            top.addView(
+                back,
+                new LinearLayout.LayoutParams(dp(44), dp(46))
+            );
         }
 
         Button menu = makeButton("☰", SURFACE, WHITE);
         menu.setTextSize(23);
         menu.setOnClickListener(v ->
-            navigate(new Page("MENU", "MAIN MENU", null))
+            navigate(new ArtistPage("MENU", "MAIN MENU", null))
         );
 
         LinearLayout.LayoutParams menuParams =
             new LinearLayout.LayoutParams(dp(46), dp(46));
+
         menuParams.setMargins(dp(5), 0, dp(7), 0);
         top.addView(menu, menuParams);
 
         TextView title = makeText("AVESON ARTIST", 17, WHITE, true);
         title.setGravity(Gravity.CENTER);
 
-        top.addView(title, new LinearLayout.LayoutParams(0, dp(46), 1));
+        top.addView(
+            title,
+            new LinearLayout.LayoutParams(0, dp(46), 1)
+        );
 
         Button bell = makeButton("🔔", BLUE, WHITE);
         bell.setTextSize(22);
         bell.setOnClickListener(v ->
-            navigate(new Page("NOTIFICATIONS", "NOTIFICATIONS", null))
+            navigate(new ArtistPage(
+                "NOTIFICATIONS",
+                "NOTIFICATIONS",
+                null
+            ))
         );
 
-        top.addView(bell, new LinearLayout.LayoutParams(dp(46), dp(46)));
+        top.addView(
+            bell,
+            new LinearLayout.LayoutParams(dp(46), dp(46))
+        );
+
         root.addView(top);
 
         View divider = new View(this);
@@ -174,6 +184,7 @@ public class MainActivity extends Activity {
 
         LinearLayout.LayoutParams dividerParams =
             new LinearLayout.LayoutParams(-1, dp(1));
+
         dividerParams.setMargins(0, dp(12), 0, dp(8));
         root.addView(divider, dividerParams);
 
@@ -212,6 +223,7 @@ public class MainActivity extends Activity {
         upload.setOrientation(LinearLayout.VERTICAL);
         upload.setGravity(Gravity.CENTER);
         upload.setBackground(roundDrawable(BLUE, 18, BLUE));
+
         upload.setOnClickListener(v ->
             selectTab("UPLOAD", "UPLOAD MUSIC")
         );
@@ -226,6 +238,7 @@ public class MainActivity extends Activity {
 
         LinearLayout.LayoutParams uploadParams =
             new LinearLayout.LayoutParams(dp(65), dp(68));
+
         uploadParams.setMargins(dp(3), 0, dp(3), 0);
         dock.addView(upload, uploadParams);
 
@@ -234,6 +247,7 @@ public class MainActivity extends Activity {
 
         LinearLayout.LayoutParams dockParams =
             new LinearLayout.LayoutParams(-1, dp(80));
+
         dockParams.setMargins(0, dp(7), 0, dp(3));
         root.addView(dock, dockParams);
     }
@@ -244,7 +258,8 @@ public class MainActivity extends Activity {
         String type,
         String title
     ) {
-        boolean selected = currentPage.type.equals(type);
+        boolean selected =
+            navigation.getCurrentPage().type.equals(type);
 
         LinearLayout tab = new LinearLayout(this);
         tab.setOrientation(LinearLayout.VERTICAL);
@@ -258,14 +273,22 @@ public class MainActivity extends Activity {
         );
 
         TextView iconView = makeText(
-            icon, 22, selected ? BLUE : MUTED, true
+            icon,
+            22,
+            selected ? BLUE : MUTED,
+            true
         );
+
         iconView.setGravity(Gravity.CENTER);
         tab.addView(iconView);
 
         TextView label = makeText(
-            title, 8, selected ? BLUE : MUTED, true
+            title,
+            8,
+            selected ? BLUE : MUTED,
+            true
         );
+
         label.setGravity(Gravity.CENTER);
         tab.addView(label);
 
@@ -294,7 +317,7 @@ public class MainActivity extends Activity {
             content,
             artistUI,
             (title, items) -> navigate(
-                new Page("CATEGORY", title, items)
+                new ArtistPage("CATEGORY", title, items)
             ),
             CARD,
             BLUE,
@@ -320,22 +343,29 @@ public class MainActivity extends Activity {
         card.addView(makeText(title, 19, WHITE, true));
 
         TextView detail = makeText(description, 13, MUTED, false);
+
         LinearLayout.LayoutParams detailParams =
             new LinearLayout.LayoutParams(-1, -2);
+
         detailParams.setMargins(0, dp(7), 0, dp(15));
         card.addView(detail, detailParams);
 
         Button open = makeButton("OPEN ROOM     →", BLUE, WHITE);
         open.setTextSize(13);
+
         open.setOnClickListener(v ->
-            navigate(new Page("CATEGORY", title, items))
+            navigate(new ArtistPage("CATEGORY", title, items))
         );
 
-        card.addView(open, new LinearLayout.LayoutParams(-1, dp(47)));
+        card.addView(
+            open,
+            new LinearLayout.LayoutParams(-1, dp(47))
+        );
+
         addCardToContent(card);
     }
 
-    private void showCategoryContent(Page page) {
+    private void showCategoryContent(ArtistPage page) {
         addText("ARTIST SPACE", 12, BLUE, true);
         addText(page.title, 24, WHITE, true);
         addText("Choose a section to continue.", 14, MUTED, false);
@@ -357,19 +387,38 @@ public class MainActivity extends Activity {
 
     private void showDiscovery() {
         ArtistDiscovery discovery = new ArtistDiscovery(
-            this, content, artistUI,
-            (type, title) -> navigate(new Page(type, title, null)),
-            CARD, BLUE, WHITE, MUTED, BORDER
+            this,
+            content,
+            artistUI,
+            (type, title) -> navigate(
+                new ArtistPage(type, title, null)
+            ),
+            CARD,
+            BLUE,
+            WHITE,
+            MUTED,
+            BORDER
         );
+
         discovery.render();
     }
 
     private void showUpload() {
         ArtistUpload upload = new ArtistUpload(
-            this, content, artistUI,
-            (type, title) -> navigate(new Page(type, title, null)),
-            SURFACE, CARD, BLUE, WHITE, MUTED, BORDER
+            this,
+            content,
+            artistUI,
+            (type, title) -> navigate(
+                new ArtistPage(type, title, null)
+            ),
+            SURFACE,
+            CARD,
+            BLUE,
+            WHITE,
+            MUTED,
+            BORDER
         );
+
         upload.render();
     }
 
@@ -378,7 +427,9 @@ public class MainActivity extends Activity {
             this,
             content,
             artistUI,
-            (type, title) -> navigate(new Page(type, title, null)),
+            (type, title) -> navigate(
+                new ArtistPage(type, title, null)
+            ),
             SURFACE,
             CARD,
             BLUE,
@@ -395,7 +446,9 @@ public class MainActivity extends Activity {
             this,
             content,
             artistUI,
-            (type, title) -> navigate(new Page(type, title, null)),
+            (type, title) -> navigate(
+                new ArtistPage(type, title, null)
+            ),
             SURFACE,
             CARD,
             BLUE,
@@ -408,22 +461,23 @@ public class MainActivity extends Activity {
     }
 
     private void showNotifications() {
-        ArtistNotifications notifications = new ArtistNotifications(
-            this,
-            content,
-            artistUI,
-            SURFACE,
-            CARD,
-            BLUE,
-            WHITE,
-            MUTED,
-            BORDER
-        );
+        ArtistNotifications notifications =
+            new ArtistNotifications(
+                this,
+                content,
+                artistUI,
+                SURFACE,
+                CARD,
+                BLUE,
+                WHITE,
+                MUTED,
+                BORDER
+            );
 
         notifications.render();
     }
 
-    private void showRoom(Page page) {
+    private void showRoom(ArtistPage page) {
         ArtistRoom room = new ArtistRoom(
             this,
             content,
@@ -442,8 +496,10 @@ public class MainActivity extends Activity {
 
     private void addSectionTitle(String title) {
         TextView heading = makeText(title, 15, WHITE, true);
+
         LinearLayout.LayoutParams params =
             new LinearLayout.LayoutParams(-1, -2);
+
         params.setMargins(dp(3), dp(18), 0, dp(8));
         content.addView(heading, params);
     }
@@ -465,6 +521,7 @@ public class MainActivity extends Activity {
 
         LinearLayout.LayoutParams iconParams =
             new LinearLayout.LayoutParams(dp(48), dp(48));
+
         iconParams.setMargins(0, 0, dp(13), 0);
         card.addView(iconView, iconParams);
 
@@ -472,21 +529,26 @@ public class MainActivity extends Activity {
         textArea.setOrientation(LinearLayout.VERTICAL);
 
         textArea.addView(makeText(title, 14, WHITE, true));
+
         TextView detail = makeText(description, 11, MUTED, false);
 
         LinearLayout.LayoutParams detailParams =
             new LinearLayout.LayoutParams(-1, -2);
+
         detailParams.setMargins(0, dp(4), 0, 0);
         textArea.addView(detail, detailParams);
 
-        card.addView(textArea, new LinearLayout.LayoutParams(0, -2, 1));
+        card.addView(
+            textArea,
+            new LinearLayout.LayoutParams(0, -2, 1)
+        );
 
         TextView arrow = makeText("›", 27, BLUE, true);
         card.addView(arrow);
 
         card.setOnClickListener(v -> {
             if (type.equals("ROOM")) {
-                navigate(new Page("ROOM", destination, null));
+                navigate(new ArtistPage("ROOM", destination, null));
             } else {
                 selectTab(type, destination);
             }
@@ -509,8 +571,10 @@ public class MainActivity extends Activity {
         card.addView(symbol);
 
         TextView heading = makeText(title, 18, WHITE, true);
+
         LinearLayout.LayoutParams headingParams =
             new LinearLayout.LayoutParams(-1, -2);
+
         headingParams.setMargins(0, dp(8), 0, dp(6));
         card.addView(heading, headingParams);
 
