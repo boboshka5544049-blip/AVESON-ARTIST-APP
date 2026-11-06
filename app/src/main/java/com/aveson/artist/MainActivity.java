@@ -373,23 +373,20 @@ public class MainActivity extends Activity {
     }
 
     private void showMyMusic() {
-        addText("YOUR COLLECTION", 12, BLUE, true);
-        addText("MY MUSIC", 27, WHITE, true);
-        addText(
-            "Your music and releases will be organized here.",
-            14, MUTED, false
+        ArtistMyMusic myMusic = new ArtistMyMusic(
+            this,
+            content,
+            artistUI,
+            (type, title) -> navigate(new Page(type, title, null)),
+            SURFACE,
+            CARD,
+            BLUE,
+            WHITE,
+            MUTED,
+            BORDER
         );
 
-        addFeatureCard(
-            "♫",
-            "YOUR MUSIC LIBRARY",
-            "Your uploaded songs, approved releases and music details.",
-            null,
-            null
-        );
-
-        addQuickCard("♫", "MY RELEASES",
-            "Manage your submitted releases", "ROOM", "MY RELEASES");
+        myMusic.render();
     }
 
     private void showProfile() {
